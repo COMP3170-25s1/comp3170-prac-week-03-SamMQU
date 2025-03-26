@@ -154,7 +154,13 @@ public class Scene {
 
 		dest.identity();
 		
-		dest.rotateZ(angle);
+		float s = (float) Math.sin(angle);
+		float c = (float) Math.cos(angle);
+		
+		dest.m00(c);
+		dest.m01(s);
+		dest.m10(-s);
+		dest.m11(c);
 
 		return dest;
 	}
