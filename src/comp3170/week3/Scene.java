@@ -30,6 +30,9 @@ public class Scene {
 	private int colourBuffer;
 
 	private Shader shader;
+	
+	private Matrix4f modelMatrix = new Matrix4f();
+	private float angle = 0;
 
 	public Scene() {
 
@@ -80,20 +83,36 @@ public class Scene {
 
 	}
 
-	public void draw() {
-		
+	public void draw(float deltaTime) {
+		angle += deltaTime;
+
+		float radius = 0.9f;
+		float x = (float)Math.cos(angle) * radius;
+		float y = (float)Math.sin(angle) * radius;
+
+		Matrix4f scaleMatrix = new Matrix4f();
+		Matrix4f rotationMatrix = new Matrix4f();
+		Matrix4f translationMatrix = new Matrix4f();
+
+		scaleMatrix(0.1f, 0.1f, scaleMatrix);
+		rotationMatrix(angle, rotationMatrix);
+		translationMatrix(x, y, translationMatrix);
+
+		modelMatrix.identity();
+		modelMatrix.mul(translationMatrix).mul(rotationMatrix).mul(scaleMatrix);
+
 		shader.enable();
-		// set the attributes
+		shader.setUniform("u_modelMatrix", modelMatrix);
 		shader.setAttribute("a_position", vertexBuffer);
 		shader.setAttribute("a_colour", colourBuffer);
 
-		// draw using index buffer
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-		
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
-
 	}
+
+
+
 
 	/**
 	 * Set the destination matrix to a translation matrix. Note the destination
@@ -134,7 +153,9 @@ public class Scene {
 
 	public static Matrix4f rotationMatrix(float angle, Matrix4f dest) {
 
-		// TODO: Your code here
+		dest.identity();
+		
+		dest.rotateZ(angle);
 
 		return dest;
 	}
@@ -151,7 +172,10 @@ public class Scene {
 
 	public static Matrix4f scaleMatrix(float sx, float sy, Matrix4f dest) {
 
-		// TODO: Your code here
+		dest.identity();
+		
+		dest.m00(sx);
+		dest.m11(sy);
 
 		return dest;
 	}

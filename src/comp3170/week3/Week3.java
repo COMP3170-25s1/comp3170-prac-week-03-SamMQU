@@ -17,6 +17,9 @@ public class Week3 implements IWindowListener {
 	private Window window;
 	private Shader shader;
 	
+	private long oldTime;
+
+	
 	final private File DIRECTORY = new File("src/comp3170/week3"); 
 	
 	private int width = 800;
@@ -39,7 +42,9 @@ public class Week3 implements IWindowListener {
 		
 		new ShaderLibrary(DIRECTORY);
 		// set the background colour to white
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);	
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		oldTime = System.currentTimeMillis();
+
 		
 		// create the scene
 		scene = new Scene();
@@ -49,13 +54,16 @@ public class Week3 implements IWindowListener {
 
 	@Override
 	public void draw() {
+		glClear(GL_COLOR_BUFFER_BIT);
 
-        // clear the colour buffer
-		glClear(GL_COLOR_BUFFER_BIT);	
-		
-		scene.draw();
-	    
+		long currentTime = System.currentTimeMillis();
+		float deltaTime = (currentTime - oldTime) / 1000f;
+		oldTime = currentTime;
+
+		scene.draw(deltaTime);
 	}
+
+
 
 	@Override
 	public void resize(int width, int height) {
