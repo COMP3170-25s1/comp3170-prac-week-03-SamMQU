@@ -87,16 +87,15 @@ public class Scene {
 		angle += deltaTime;
 
 		float radius = 0.9f;
-		float x = (float)Math.cos(angle) * radius;
-		float y = (float)Math.sin(angle) * radius;
+		float scale = 0.1f;
 
 		Matrix4f scaleMatrix = new Matrix4f();
 		Matrix4f rotationMatrix = new Matrix4f();
 		Matrix4f translationMatrix = new Matrix4f();
 
-		scaleMatrix(0.1f, 0.1f, scaleMatrix);
+		scaleMatrix(scale, scale, scaleMatrix);
 		rotationMatrix(angle, rotationMatrix);
-		translationMatrix(x, y, translationMatrix);
+		translationMatrix((float)Math.cos(angle) * radius, (float)Math.sin(angle) * radius, translationMatrix);
 
 		modelMatrix.identity();
 		modelMatrix.mul(translationMatrix).mul(rotationMatrix).mul(scaleMatrix);
